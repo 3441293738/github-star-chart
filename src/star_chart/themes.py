@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, replace
 
 
@@ -48,6 +49,8 @@ THEMES: dict[str, dict[str, Palette]] = {
     },
 }
 
+HEX_COLOR = re.compile(r"^#[0-9a-fA-F]{6}$")
+
 
 def palette(name: str, mode: str, accent: str = "", accent_2: str = "") -> Palette:
     key = name.lower()
@@ -55,7 +58,11 @@ def palette(name: str, mode: str, accent: str = "", accent_2: str = "") -> Palet
         raise ValueError(f"unknown theme {name!r}; choose: {', '.join(sorted(THEMES))}")
     result = THEMES[key][mode]
     if accent:
+        if not HEX_COLOR.fullmatch(accent):
+            raise ValueError("accent must be a six-digit hex color such as #fe2c55")
         result = replace(result, accent=accent, glow=accent)
     if accent_2:
+        if not HEX_COLOR.fullmatch(accent_2):
+            raise ValueError("accent-2 must be a six-digit hex color such as #25f4ee")
         result = replace(result, accent_2=accent_2)
     return result

@@ -39,6 +39,10 @@ class RenderTests(unittest.TestCase):
         self.assertEqual(custom.accent, "#123456")
         self.assertEqual(custom.accent_2, "#abcdef")
 
+    def test_rejects_svg_attribute_in_color(self) -> None:
+        with self.assertRaises(ValueError):
+            palette("github", "light", '#fff" onload="alert(1)')
+
 
 if __name__ == "__main__":
     unittest.main()

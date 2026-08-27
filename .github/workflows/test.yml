@@ -1,0 +1,27 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Run unit tests
+        env:
+          PYTHONPATH: src
+        run: python3 -m unittest discover -s tests -v
+      - name: Generate example SVGs
+        env:
+          PYTHONPATH: src
+        run: |
+          python3 -m star_chart.cli \
+            --fixture tests/fixtures/creatorhub.json \
+            --output-dir examples/generated \
+            --theme creatorhub \
+            --style card

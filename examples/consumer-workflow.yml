@@ -1,0 +1,27 @@
+name: Update Star Chart
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  watch:
+    types: [started]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: star-chart
+  cancel-in-progress: true
+
+jobs:
+  chart:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: 3441293738/github-star-chart@v1
+        with:
+          theme: creatorhub
+          style: card
+          curve: smooth
+          branch: star-history
